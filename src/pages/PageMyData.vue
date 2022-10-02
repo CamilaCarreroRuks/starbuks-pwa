@@ -60,7 +60,9 @@ import MyLoading from "src/components/popups/MyLoading.vue";
 import { useSession } from "src/stores/session";
 import { useUser } from "src/stores/user";
 import { useQuasar } from "quasar";
+import { useRouter } from "vue-router";
 
+const $router = useRouter();
 const $q = useQuasar();
 const storeSession = useSession();
 const storeUser = useUser();
@@ -78,7 +80,7 @@ const getUser = async () => {
   try {
     const user = (await storeSession.getUserId()).toString();
     loading.value = true;
-    const response = await storeUser.listOneUser(user);
+    const response = await storeUser.isExistUser(user);
     if (response.status === 200) {
       name.value = response.value.name;
       identification.value = response.value.identification;

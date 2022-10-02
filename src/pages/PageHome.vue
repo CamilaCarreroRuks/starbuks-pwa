@@ -54,7 +54,7 @@ const verifyDataUser = async () => {
     const user = (await storeSession.getUserId()).toString();
     const response = await storeUser.listOneUser(user);
     if (response.status === 200) {
-      if (response.value.name === null) {
+      if (response.value === undefined) {
         $q.notify({
           message: "Por favor ingrese sus datos",
           color: "warning",

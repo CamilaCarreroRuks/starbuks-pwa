@@ -69,12 +69,14 @@ import { computed, onMounted, ref } from "vue";
 import { useRouter } from "vue-router";
 import { useQuasar } from "quasar";
 import { useSession } from "src/stores/session";
+import { useUser } from "src/stores/user";
 import { useBuys } from "src/stores/buys";
 import { useProducts } from "src/stores/products";
 import ticketView from "src/components/popups/ticketView.vue";
 
 const $q = useQuasar();
 const storeSession = useSession();
+const storeUser = useUser();
 const storeBuy = useBuys();
 const storeProducts = useProducts();
 const $router = useRouter();
@@ -119,6 +121,9 @@ const deleteBuy = () => {
 };
 const buyProducts = async () => {
   try {
+    const verification = await verifyDataUser().then((res) => {return res});
+    console.log(verification);
+    if (verification === true) {
     const data = {
       user: (await storeSession.getUserId()).toString(),
       date: date.value,
@@ -128,20 +133,20 @@ const buyProducts = async () => {
       price: total.value,
     };
     const response = await storeBuy.addBuy(data);
-
     if (response.status === 200) {
-      idBuy.value = response.value;
-      $q.notify({
-        color: "green-4",
-        textColor: "white",
-        icon: "cloud_done",
-        message: "Compra Realizada",
-      });
-      buy.value.forEach((item) => {
-        modifyProduct(item.name, item.stock);
-      });
-      localStorage.clear();
-      showTicket.value = true;
+
+        idBuy.value = response.value;
+        $q.notify({
+          color: "green-4",
+          textColor: "white",
+          icon: "cloud_done",
+          message: "Compra Realizada",
+        });
+        buy.value.forEach((item) => {
+          modifyProduct(item.name, item.stock);
+        });
+        localStorage.clear();
+        showTicket.value = true;
     } else {
       $q.notify({
         color: "red-4",
@@ -150,6 +155,7 @@ const buyProducts = async () => {
         message: "No se pudo realizar la compra",
       });
     }
+  }
   } catch (error) {
     console.error(error);
   }
@@ -177,7 +183,26 @@ const modifyProduct = async (name, count) => {
     console.error(error);
   }
 };
-
+const verifyDataUser = async () => {
+  try {
+    const user = (await storeSession.getUserId()).toString();
+    const response = await storeUser.listOneUser(user);
+    if (response.status === 200) {
+      if (response.value === undefined) {
+        $q.notify({
+          message: "Por favor ingrese sus datos",
+          color: "warning",
+          timeout: 2000,
+        });
+        $router.push("/mydata");
+      } else{
+        return true;
+      }
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
 const goHome = () => {
   $router.replace({ name: "home" });
 };

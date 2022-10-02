@@ -146,14 +146,6 @@ export const useSession = defineStore("session", {
       } else {
         if (
           createUserResponse.code &&
-          createUserResponse.code === "auth/email-already-in-use"
-        ) {
-          Notify.create({
-            type: "negative",
-            message: "El correo electrónico ya se encuentra registrado",
-          });
-        } else if (
-          createUserResponse.code &&
           createUserResponse.code === "auth/invalid-email"
         ) {
           Notify.create({

@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page style="min-height: 800px">
     <div class="q-ma-md">
       <q-card class="bg-primary text-white" v-if="dataHotDrink.length > 0">
         <h6 class="q-ma-none q-mb-sm q-mt-sm text-center">Bebidas Calientes</h6>

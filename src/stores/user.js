@@ -22,9 +22,20 @@ export const useUser = defineStore("users", {
         return { status: 400 };
       }
     },
-    async listOneUser(payload) {
+    async isExistUser(payload) {
       const docSnap = await getDoc(refs.getOneUser(payload));
       if (docSnap.exists()) {
+        return {
+          value: docSnap.data(),
+          status: 200,
+        };
+      } else {
+        return { status: 400 };
+      }
+    },
+    async listOneUser(payload) {
+      const docSnap = await getDoc(refs.getOneUser(payload));
+      if (docSnap) {
         return {
           value: docSnap.data(),
           status: 200,

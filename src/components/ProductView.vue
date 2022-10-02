@@ -5,7 +5,7 @@
   >
     <div class="col-5 q-ma-sm self-center bg-secondary">
       <q-img id="image" class="" :alt="name"
-      :src="icon" style="height: 110px;" />
+      :src="icon" style="max-height: 100%;" />
     </div>
     <div class="col-6">
       <p class="text-center text-bold q-ma-none q-mt-sm">{{ name }}</p>
